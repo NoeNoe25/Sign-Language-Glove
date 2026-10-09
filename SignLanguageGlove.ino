@@ -1,5 +1,3 @@
-#include <Arduino_APDS9960.h>
-
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 #include <DFRobotDFPlayerMini.h>
@@ -34,15 +32,16 @@ struct ASLCommand {
   uint16_t fileNumber;
 };
 
-// Customize these mappings as needed (file numbers can be any 1-9999)
+// Finger pattern per sign: one letter per finger (S = straight, B = bent, F = fully bent).
+// fileNumber is the track played from the DFPlayer SD card.
 ASLCommand aslCommands[] = {
   // Basic commands
-  {"Hello", "BSBSS", 2},       // Will play 0101.mp3
-  {"Goodbye", "SSSSS", 1},     // Will play 0102.mp3
-  {"Thank you", "BSSBS", 6},   // Will play 0103.mp3
-  {"Yes", "FFFFB",7},         // Will play 0201.mp3
-  {"No", "FFBFF", 4},          // Will play 0202.mp3
-  {"Help", "FSFSS", 3},        // Will play 0203.mp3
+  {"Hello", "BSBSS", 2},
+  {"Goodbye", "SSSSS", 1},
+  {"Thank you", "BSSBS", 6},
+  {"Yes", "FFFFB",7},
+  {"No", "FFBFF", 4},
+  {"Help", "FSFSS", 3},
   
   // Alphabet (A-Z)
   {"A", "SFFFF", 9}, {"B", "BSSSS", 10}, {"C", "SBBBB", 11},
@@ -57,9 +56,9 @@ ASLCommand aslCommands[] = {
   {"Y", "SFFFS", 33}, {"Z", "FSFFF", 34},
   
   // Additional phrases
-  {"I love you", "SSFFS", 401},      // Will play 0401.mp3
-  {"What's your name", "FSFFS", 8}, // Will play 0402.mp3
-  {"Skibidi", "SBSBS", 5}          // Will play 0501.mp3
+  {"I love you", "SSFFS", 401},
+  {"What's your name", "FSFFS", 8},
+  {"Skibidi", "SBSBS", 5}
 };
 const int aslCommandCount = sizeof(aslCommands)/sizeof(aslCommands[0]);
 
@@ -247,12 +246,4 @@ void printCalibrationValues() {
       Serial.println(F("WARNING: Invalid calibration!"));
     }
   }
-}
-
-void printCombinedState() {
-  Serial.print(F("Hand: "));
-  for (int i = 0; i < NUM_SENSORS; i++) {
-    Serial.print(getFingerState(i));
-  }
-  Serial.println();
 }
